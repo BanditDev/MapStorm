@@ -1,0 +1,14 @@
+{
+  "scripts": {
+    "start": "parcel src/index.html"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.123",
+    "lodash": "^4.17.11",
+    "parcel": "^1.12.1",
+    "rxjs": "^6.4.0"
+  },
+  "devDependencies": {
+    "typescript": "^3.4.3"
+  }
+}
