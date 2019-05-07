@@ -1,4 +1,8 @@
-export const diff = (node1: Map<string, any>, node2: Map<string, any>, isRoot = false) => {
+export const diff = (
+  node1: Map<string, any>,
+  node2: Map<string, any>,
+  isRoot = false,
+) => {
   const tasks = new Set();
 
   node1.forEach((_, key) => {
@@ -6,35 +10,35 @@ export const diff = (node1: Map<string, any>, node2: Map<string, any>, isRoot = 
       const v1 = node1.get(key);
       const v2 = node2.get(key);
 
-      if (typeof v2 === "string" && v1 !== v2) {
+      if (typeof v2 === 'string' && v1 !== v2) {
         return tasks.add({
-          action: "set",
+          action: 'set',
           value: v1,
-          name: "textContent",
-          target: key
+          name: 'textContent',
+          target: key,
         });
       }
 
       if (v1.component !== v2.component) {
-        if (typeof v1 !== "boolean" && typeof v2 !== "boolean") {
+        if (typeof v1 !== 'boolean' && typeof v2 !== 'boolean') {
           return void tasks.add({
-            action: "replace",
+            action: 'replace',
             prev: v1,
-            next: v2
+            next: v2,
           });
         }
 
-        if (typeof v2 === "boolean") {
+        if (typeof v2 === 'boolean') {
           return void tasks.add({
-            action: "create",
+            action: 'create',
             name: v1.component,
             props: v1.props,
-            id: key
+            id: key,
           });
         } else {
           return void tasks.add({
-            action: "remove",
-            id: key
+            action: 'remove',
+            id: key,
           });
         }
       }
@@ -46,10 +50,10 @@ export const diff = (node1: Map<string, any>, node2: Map<string, any>, isRoot = 
 
             if (v !== prevVal) {
               tasks.add({
-                action: "set",
+                action: 'set',
                 value: v,
                 name: name,
-                target: key
+                target: key,
               });
             }
           });
@@ -60,29 +64,29 @@ export const diff = (node1: Map<string, any>, node2: Map<string, any>, isRoot = 
     } else {
       const v1 = node1.get(key);
 
-      if (v1 === undefined || v1 === null || typeof v1 === "boolean") {
+      if (v1 === undefined || v1 === null || typeof v1 === 'boolean') {
         if (node2.has(key)) {
           tasks.add({
-            action: "remove",
-            id: key
+            action: 'remove',
+            id: key,
           });
         }
         return;
       }
 
-      if (typeof v1.component === "string") {
+      if (typeof v1.component === 'string') {
         tasks.add({
-          action: "create",
+          action: 'create',
           name: v1.component,
           props: v1.props,
-          id: key
+          id: key,
         });
-      } else if (typeof v1 === "string") {
+      } else if (typeof v1 === 'string') {
         tasks.add({
-          action: "set",
+          action: 'set',
           value: v1,
-          name: "textContent",
-          target: key
+          name: 'textContent',
+          target: key,
         });
       }
     }
@@ -91,7 +95,9 @@ export const diff = (node1: Map<string, any>, node2: Map<string, any>, isRoot = 
   if (isRoot) {
     node1.forEach((c, key) => {
       if (c && c.props && 'key' in c.props) {
-        const f = Array.from(node2).find(([_, component]) => component.props && component.props.key === c.props.key);
+        const f = Array.from(node2).find(
+          ([_, component]) => component.props && component.props.key === c.props.key,
+        );
 
         if (f) {
           node2.delete(key);
@@ -99,17 +105,17 @@ export const diff = (node1: Map<string, any>, node2: Map<string, any>, isRoot = 
         return;
       }
 
-
       if (node2.has(key)) {
         node2.delete(key);
       }
-    })
+    });
 
-
-    node2.forEach((_, key) => tasks.add({
-      action: "remove",
-      id: key
-    }))
+    node2.forEach((_, key) =>
+      tasks.add({
+        action: 'remove',
+        id: key,
+      }),
+    );
   }
 
   return tasks;

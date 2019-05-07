@@ -1,4 +1,3 @@
-
 export const observable = (object: object, subject, next) =>
   Object.keys(object).reduce(
     (acc: object, name) => ({
@@ -9,7 +8,7 @@ export const observable = (object: object, subject, next) =>
         setTimeout(() => subject.next(next.component));
 
         return result;
-      }
+      },
     }),
-    {}
+    {},
   );

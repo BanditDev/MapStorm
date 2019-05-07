@@ -1,7 +1,16 @@
-import { merge, Observable, Subject, ObservableInput, ObservedValueOf, OperatorFunction, from, of } from "rxjs";
-import { map, mapTo, tap, debounceTime } from "rxjs/operators";
-import { MergeMapOperator } from "rxjs/internal/operators/mergeMap";
-import { pipeFromArray } from "rxjs/internal/util/pipe";
+import {
+  merge,
+  Observable,
+  Subject,
+  ObservableInput,
+  ObservedValueOf,
+  OperatorFunction,
+  from,
+  of,
+} from 'rxjs';
+import { map, mapTo, tap, debounceTime } from 'rxjs/operators';
+import { MergeMapOperator } from 'rxjs/internal/operators/mergeMap';
+import { pipeFromArray } from 'rxjs/internal/util/pipe';
 
 // export const actions = (func: any) => <T>(source: Observable<T>) => {
 //   const subject = new Subject();
@@ -18,8 +27,8 @@ import { pipeFromArray } from "rxjs/internal/util/pipe";
 // };
 
 type ObservableObject<T extends ObservableInput<any>> = {
-  [K: string]: T
-}
+  [K: string]: T;
+};
 
 /*
 const obj = {
@@ -45,39 +54,45 @@ type ValueOf<T> = T[keyof T];
 export function actions<T, R, O extends ObservableObject<any>>(
   project: (c: T) => O,
   resultSelector?: number,
-  concurrent: number = Number.POSITIVE_INFINITY
-): OperatorFunction<T, ObservedValueOf<O>|R> {
+  concurrent: number = Number.POSITIVE_INFINITY,
+): OperatorFunction<T, ObservedValueOf<O> | R> {
+  return (source: Observable<T>) =>
+    source.lift(
+      new MergeMapOperator(conf => {
+        const actionsObject = project(conf);
+        const actionNames = Object.keys(actionsObject); // as (keyof (typeof actionsObject));
+        const actionsStreamList = actionNames.reduce((acc, name) => {
+          const subject = new Subject();
+          const observable = subject.asObservable();
+          const acts = [...actionsObject[name], mapTo(conf)];
+          const stream = observable.pipe(pipeFromArray(acts));
 
-    return (source: Observable<T>) => source.lift(new MergeMapOperator((conf) => {
-      const actionsObject = project(conf);
-      const actionNames = Object.keys(actionsObject); // as (keyof (typeof actionsObject));
-      const actionsStreamList = actionNames.reduce((acc, name) => {
-            const subject = new Subject();
-            const observable = subject.asObservable();
-            const acts = [...actionsObject[name], mapTo(conf)];
-            const stream = observable.pipe(pipeFromArray(acts));
+          return [
+            ...acc,
+            {
+              stream,
+              subject,
+              name,
+            },
+          ];
+        }, []);
 
-            return [
-              ...acc,
-              {
-                stream,
-                subject,
-                name
-              }
-            ]
-          },
-          []
-      );
+        const actionStreams = actionsStreamList.reduce(
+          (acc, act: any) => [...acc, act.stream],
+          [],
+        );
 
-      const actionStreams = actionsStreamList.reduce(
-        (acc, act: any) => ([...acc, act.stream]), []);
+        const actions = actionsStreamList.reduce(
+          (acc, act) => ({
+            ...acc,
+            [act.name]: v => {
+              act.subject.next(v);
+            },
+          }),
+          {},
+        );
 
-      const actions = actionsStreamList.reduce((acc, act) => ({
-        ...acc, [act.name]: v => {
-        act.subject.next(v)
-      }}), {});
-
-
-    return merge(...actionStreams, of(conf)).pipe(mapTo({...conf, actions}))
-  }, concurrent));
+        return merge(...actionStreams, of(conf)).pipe(mapTo({ ...conf, actions }));
+      }, concurrent),
+    );
 }
