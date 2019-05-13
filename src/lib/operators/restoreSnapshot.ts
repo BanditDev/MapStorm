@@ -1,4 +1,4 @@
-import { map } from "rxjs/operators";
+import { map } from 'rxjs/operators';
 
 export const restoreSnapshot = fn => {
   let isActive = true;
@@ -7,7 +7,7 @@ export const restoreSnapshot = fn => {
       isActive = false;
       return {
         ...c,
-        state: fn()
+        state: fn(),
       };
     } else {
       return c;

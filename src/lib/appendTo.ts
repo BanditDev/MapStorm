@@ -1,6 +1,6 @@
-import { renderFromStreamToHtml } from "./render/renderFromStreamToHtml";
-import { flatMap, tap } from "rxjs/operators";
-import { applyTasks } from "./render/dom/applyTasks";
+import { renderFromStreamToHtml } from './render/renderFromStreamToHtml';
+import { flatMap, tap } from 'rxjs/operators';
+import { applyTasks } from './render/dom/applyTasks';
 
 export const appendTo = (node: HTMLElement, component) => {
   renderFromStreamToHtml(component)
@@ -8,7 +8,7 @@ export const appendTo = (node: HTMLElement, component) => {
       flatMap(promise => promise),
       tap(tasks => {
         applyTasks(tasks, node);
-      })
+      }),
     )
     .subscribe();
 };

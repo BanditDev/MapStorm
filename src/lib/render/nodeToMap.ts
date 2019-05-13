@@ -1,6 +1,6 @@
 const subs = new Map();
-export const nodeToMap = async (node, path = "0", store = new Map()) => {
-  if (typeof node === "object" && node.props) {
+export const nodeToMap = async (node, path = '0', store = new Map()) => {
+  if (typeof node === 'object' && node.props) {
     node.propsMap = new Map();
 
     Object.keys(node.props).forEach(name => {
@@ -8,7 +8,7 @@ export const nodeToMap = async (node, path = "0", store = new Map()) => {
     });
   }
 
-  if (node && typeof node.component === "object" && node.component instanceof Array) {
+  if (node && typeof node.component === 'object' && node.component instanceof Array) {
     await new Promise(resolve => {
       node.store = store;
       node.resolve = resolve;

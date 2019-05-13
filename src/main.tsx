@@ -12,32 +12,30 @@ import {
   action,
   setState,
   mapState,
-  toState
-} from "./lib";
-import { map, mergeMap, tap } from "rxjs/operators";
-import { of } from "rxjs";
+  toState,
+} from './lib';
+import { map, mergeMap, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 (window as any).h = h;
 /** @jsx h */
 
-
 const Header = createFactory(
   defaultProps(() => ({
-    title: "hello"
+    title: 'hello',
   })),
-  render(({ props }) => <h1>{props.title}</h1>)
+  render(({ props }) => <h1>{props.title}</h1>),
 );
-
 
 const App = createFactory(
   defaultProps(() => ({})),
   defaultState({
-    title: "title",
-    isTitleVisible: true
+    title: 'title',
+    isTitleVisible: true,
   }),
-  propsToState((p) => ({
+  propsToState(p => ({
     ...p.state,
-    ...p.props
+    ...p.props,
   })),
   // restoreSnapshot(() => {
   //   return JSON.parse(localStorage.snapshot || "{}");
@@ -55,34 +53,37 @@ const App = createFactory(
   // )),
   actions(c => ({
     changeTitle: action(
-      map((event: {target: HTMLInputElement}) => event.target.value),
-      tap(title => c.state.title = title)
+      map((event: { target: HTMLInputElement }) => event.target.value),
+      tap(title => (c.state.title = title)),
     ),
     toggleTitle: action(
-      mapState((state) => state.isTitleVisible),
+      mapState(state => state.isTitleVisible),
       map(isTitleVisible => !isTitleVisible),
-      tap(isTitleVisible => c.state.isTitleVisible = isTitleVisible)
-    )
+      tap(isTitleVisible => (c.state.isTitleVisible = isTitleVisible)),
+    ),
   })),
   // onSnapshot(({state}, prev) => {
   //   localStorage.snapshot = JSON.stringify(state || {});
   // }),
   render(({ state, actions, props }) => {
-    console.log('render', state)
+    console.log('render', state);
     return (
       <div>
         <input defaultValue={state.title} onInput={actions.changeTitle} />
         <div>
           <span>Show title?</span>
-          <input type="checkbox" defaultChecked={state.isTitleVisible} onChange={actions.toggleTitle} />
+          <input
+            type="checkbox"
+            defaultChecked={state.isTitleVisible}
+            onChange={actions.toggleTitle}
+          />
         </div>
         {state.isTitleVisible && <div>={state.title}</div>}
         {state.isTitleVisible && <Header title={state.title} />}
       </div>
     );
-  })
+  }),
 );
-
 
 // const App = createFactory(
 //   // propsToState((p: any) => ({
