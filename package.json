@@ -4,7 +4,7 @@
   },
   "dependencies": {
     "@types/lodash": "^4.14.123",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.19",
     "parcel": "^1.12.1",
     "rxjs": "^6.4.0"
   },
