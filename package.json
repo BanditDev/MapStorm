@@ -3,18 +3,18 @@
     "start": "parcel src/index.html"
   },
   "dependencies": {
-    "@types/lodash": "^4.14.123",
-    "lodash": "^4.17.19",
-    "parcel": "^1.12.1",
-    "rxjs": "^6.4.0"
+    "lodash-es": "^4.17.15",
+    "parcel": "^1.12.4",
+    "rxjs": "^6.6.2"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^1.7.0",
-    "@typescript-eslint/parser": "^1.7.0",
-    "eslint": "^5.16.0",
-    "eslint-config-prettier": "^4.2.0",
-    "eslint-plugin-prettier": "^3.0.1",
-    "prettier": "^1.17.0",
-    "typescript": "^3.4.3"
+    "@types/lodash-es": "^4.17.3",
+    "@typescript-eslint/eslint-plugin": "^3.8.0",
+    "@typescript-eslint/parser": "^3.8.0",
+    "eslint": "^7.6.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "^2.0.5",
+    "typescript": "^3.9.7"
   }
 }
