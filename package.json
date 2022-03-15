@@ -3,7 +3,7 @@
     "start": "parcel src/index.html"
   },
   "dependencies": {
-    "lodash-es": "^4.17.15",
+    "lodash-es": "^4.17.21",
     "parcel": "^1.12.4",
     "rxjs": "^6.6.2"
   },
